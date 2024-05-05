@@ -39,12 +39,23 @@ const transferSol = async() => {
 
     console.log("Airdrop completed for the Sender account");
 
+    // checkWalletBalance(connection, from)
+    async function checkWalletBalance(){
+        let walletBalance = await connection.getBalance(new PublicKey(from.publicKey))
+        return walletBalance;
+    }
+
+    console.log("checking for sender's wallet balance");
+    let walletBal = await checkWalletBalance()
+    console.log("wallet balance:", walletBal);
+    
+    console.log("transfering 50% wallet balance from sender's account");
     // Send money from "from" wallet and into "to" wallet
     var transaction = new Transaction().add(
         SystemProgram.transfer({
             fromPubkey: from.publicKey,
             toPubkey: to.publicKey,
-            lamports: LAMPORTS_PER_SOL / 100
+            lamports: walletBal/2
         })
     );
 
